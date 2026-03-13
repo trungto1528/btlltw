@@ -1,3 +1,15 @@
 spring:
   application:
     name: ltw
+  datasource:
+    url: jdbc:mysql://140.245.41.132:3306/btlltw
+    username: trung
+    password: Tkocomkdau02#
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  servlet:
+    context-path: /btlltw
+  port: 8888
