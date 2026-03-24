@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/home", true)
+                        .failureUrl("/auth/login?error=true")
                         .permitAll())
 
                 // 🚪 Logout

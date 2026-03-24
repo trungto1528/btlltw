@@ -28,4 +28,8 @@ public class ProductService {
     public List<Product> getProductsByCategory(Long categoryId) {
         return productRepository.findByCategoryId(categoryId);
     }
+
+    public List<Product> getFeaturedProducts(){
+        return productRepository.findTop4ByOrderByIdDesc();
+    }
 }
