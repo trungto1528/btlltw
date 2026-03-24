@@ -1,29 +1,10 @@
-spring:
-  application:
-    name: ltw
-  datasource:
-    url: jdbc:mysql://140.245.41.132:3306/test_btlltw?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
-    username: trung
-    password: Tkocomkdau02#
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-server:
-  servlet:
-    context-path: /btlltw
-  port: 8888 
 # spring:
 #   application:
 #     name: ltw
 #   datasource:
-#     url: jdbc:mysql://localhost:3306/test_btlltw?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
-#     username: root
-#     password: 
+#     url: jdbc:mysql://140.245.41.132:3306/test_btlltw?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+#     username: trung
+#     password: Tkocomkdau02#
 #     driver-class-name: com.mysql.cj.jdbc.Driver
 #   jpa:
 #     hibernate:
@@ -36,3 +17,22 @@ server:
 #   servlet:
 #     context-path: /btlltw
 #   port: 8888 
+spring:
+  application:
+    name: ltw
+  datasource:
+    url: jdbc:mysql://localhost:3306/test_btlltw?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 726484
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+server:
+  servlet:
+    context-path: /btlltw
+  port: 8888 

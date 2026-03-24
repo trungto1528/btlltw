@@ -23,8 +23,19 @@
 
         <div th:if="${param.error}" class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
             <p class="text-sm text-red-700 font-medium">
-                ⚠️ Email hoặc mật khẩu không chính xác.
+                Email hoặc mật khẩu không chính xác.
             </p>
+        </div>
+
+        <div th:if="${param.logout}" class="mb-4 p-3 bg-blue-100 text-blue-700 rounded-lg">
+            Bạn đã đăng xuất thành công.
+        </div>
+        <div th:if="${param.success}" 
+            class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg shadow-sm">
+            <div class="flex items-center">
+                <span class="text-green-500 mr-2">✅</span>
+                <p class="text-sm text-green-700 font-medium">Đăng ký thành công! Vui lòng đăng nhập.</p>
+            </div>
         </div>
 
         <form th:action="@{/login}" method="post" class="space-y-6">
