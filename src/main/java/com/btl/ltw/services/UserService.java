@@ -11,12 +11,12 @@ import com.btl.ltw.repository.UserRepository;
 @Service
 public class UserService {
     @Autowired
-    private  UserRepository userRepository;
-    
-    private  PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
+
+    private PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -32,7 +32,7 @@ public class UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.ROLE_CUSTOMER);
+        user.setRole(Role.CUSTOMER);
 
         userRepository.save(user);
     }

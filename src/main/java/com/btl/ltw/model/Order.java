@@ -1,12 +1,17 @@
 package com.btl.ltw.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
+import com.btl.ltw.enums.OrderStatus;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +23,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "orders")
+@Table(name = "`order`")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +32,22 @@ public class Order {
     @ManyToOne
     private User user;
 
-    private Date orderDate;
+    private double totalAmount;
 
-    private String status; // PENDING, PAID, SHIPPED, CANCELLED
+    private String shippingAddress;
 
-    private String address;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status; // PENDING, CONFIRMED, SHIPPING, COMPLETED, CANCELLED
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        if (status == null) {
+            status = OrderStatus.PENDING;
+        }
+    }
 }

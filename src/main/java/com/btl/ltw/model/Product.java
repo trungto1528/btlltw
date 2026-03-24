@@ -16,12 +16,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String productName;
     private double price;
     private String description;
-    private String image;
-
-    private int stock;
+    private String imageUrl;
 
     @ManyToOne
     private Category category;

@@ -1,10 +1,6 @@
 package com.btl.ltw.model;
 
-import com.btl.ltw.enums.Size;
-
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,19 +17,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "product_id", "size", "color" }))
-public class ProductVariant {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "order_id", "coupon_id" }))
+public class OrderCoupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private Size size; // S, M, L, XL
-
-    private String color;
-
-    private int stockQuantity;
+    @ManyToOne
+    private Order order;
 
     @ManyToOne
-    private Product product;
+    private Coupon coupon;
 }

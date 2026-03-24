@@ -22,40 +22,40 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth
 
-                // ✅ Public
-                .requestMatchers("/home","/auth/**", "/css/**", "/js/**").permitAll()
+                        // ✅ Public routes
+                        .requestMatchers("/", "/home", "/products", "/products/**",
+                                "/auth/**", "/login", "/register",
+                                "/css/**", "/js/**", "/images/**")
+                        .permitAll()
 
-                // 👑 Admin only
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // 👑 Admin only
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                // 👨‍💼 Employee + Admin
-                .requestMatchers("/employee/**").hasAnyRole("ADMIN", "EMPLOYEE")
+                        // 👨‍💼 Employee + Admin
+                        .requestMatchers("/employee/**").hasAnyRole("ADMIN", "EMPLOYEE")
 
-                // 👤 Customer
-                .requestMatchers("/cart/**", "/orders/**").hasRole("CUSTOMER")
+                        // 👤 Customer
+                        .requestMatchers("/cart/**", "/orders/**").hasRole("CUSTOMER")
 
-                // 🔐 Còn lại phải login
-                .anyRequest().authenticated()
-            )
+                        // 🔐 Còn lại phải login
+                        .anyRequest().authenticated())
 
-            // 🔑 Login form
-            .formLogin(form -> form
-                .loginPage("/auth/login")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/home", true)
-                .permitAll()
-            )
+                // 🔑 Login form
+                .formLogin(form -> form
+                        .loginPage("/auth/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/home", true)
+                        .permitAll())
 
-            // 🚪 Logout
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/auth/login")
-            )
+                // 🚪 Logout
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/auth/login"))
 
-            // ⚠️ Tạm tắt CSRF cho dễ test (sau bật lại)
-            .csrf(csrf -> csrf.disable());
+                // ⚠️ Tạm tắt CSRF cho dễ test (sau bật lại)
+                .csrf(csrf -> csrf.disable());
 
         return http.build();
     }

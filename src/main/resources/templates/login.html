@@ -1,34 +1,71 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập | QUAN AO Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
 
-<h1> Đăng nhập</h1>
+    <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 md:p-12">
+        <div class="text-center mb-10">
+            <a th:href="@{/home}" class="text-3xl font-black tracking-tighter uppercase italic inline-block mb-2">
+                QUAN AO<span class="text-blue-600">.</span>
+            </a>
+            <h2 class="text-xl font-semibold text-gray-700">Chào mừng bạn trở lại</h2>
+            <p class="text-sm text-gray-400 mt-2">Vui lòng đăng nhập để tiếp tục mua sắm</p>
+        </div>
 
-<form th:action="@{/login}" method="post">
-    <div>
-        <label>Username:</label>
-        <input type="text" name="username"/>
+        <div th:if="${param.error}" class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
+            <p class="text-sm text-red-700 font-medium">
+                ⚠️ Email hoặc mật khẩu không chính xác.
+            </p>
+        </div>
+
+        <form th:action="@{/login}" method="post" class="space-y-6">
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Tên đăng nhập</label>
+                <input type="text" name="username" required
+                       placeholder="Nhập username của bạn"
+                       class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-black focus:bg-white focus:ring-0 transition-all outline-none text-sm">
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-gray-500">Mật khẩu</label>
+                    <a href="#" class="text-xs text-blue-600 hover:underline">Quên mật khẩu?</a>
+                </div>
+                <input type="password" name="password" required
+                       placeholder="••••••••"
+                       class="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:border-black focus:bg-white focus:ring-0 transition-all outline-none text-sm">
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-black text-white font-bold py-4 rounded-lg hover:bg-gray-800 transform active:scale-[0.98] transition-all shadow-lg">
+                ĐĂNG NHẬP
+            </button>
+        </form>
+
+        <div class="relative my-8 text-center">
+            <span class="absolute inset-x-0 top-1/2 h-px bg-gray-100"></span>
+            <span class="relative bg-white px-4 text-xs text-gray-400 uppercase tracking-widest">Hoặc</span>
+        </div>
+
+        <button class="w-full flex items-center justify-center gap-3 border border-gray-200 py-3 rounded-lg hover:bg-gray-50 transition text-sm font-medium">
+            <img src="https://www.svgrepo.com/show/355037/google.svg" class="w-5 h-5" alt="Google">
+            Đăng nhập với Google
+        </button>
+
+        <p class="text-center mt-10 text-sm text-gray-500">
+            Bạn chưa có tài khoản? 
+            <a th:href="@{/auth/register}" class="font-bold text-black hover:underline decoration-blue-600 decoration-2">Đăng ký ngay</a>
+        </p>
     </div>
-
-    <div>
-        <label>Password:</label>
-        <input type="password" name="password"/>
-    </div>
-
-    <button type="submit">Login</button>
-</form>
-
-<p th:if="${param.error}" style="color:red;">
-    Sai username hoặc password!
-</p>
-
-<p>
-    Chưa có tài khoản?
-    <a th:href="@{/auth/register}">Đăng ký</a>
-</p>
 
 </body>
 </html>

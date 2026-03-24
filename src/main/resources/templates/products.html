@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Sản Phẩm - Cửa Hàng Bán Quần Áo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans antialiased text-gray-900">
+    
+    <div th:replace="~{fragments/header :: header}"></div>
+    <section class="max-w-7xl mx-auto px-4 py-12">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-gray-100 pb-6">
+            <div>
+                <nav class="flex text-xs text-gray-400 mb-2 uppercase tracking-widest font-bold">
+                    <a href="#" class="hover:text-black">Trang chủ</a>
+                    <span class="mx-2">/</span>
+                    <span class="text-black">Sản phẩm mới</span>
+                </nav>
+                <h2 class="text-4xl font-extrabold tracking-tight">New Arrivals</h2>
+            </div>
+            <div class="mt-4 md:mt-0 flex gap-4">
+                <p class="text-gray-400 text-sm mr-4" th:text="${products != null ? products.size() + ' items' : '0 items'}"></p>
+                <select class="text-sm border-none bg-transparent font-bold focus:ring-0 cursor-pointer">
+                    <option>Sắp xếp: Mới nhất</option>
+                    <option>Giá: Thấp đến Cao</option>
+                    <option>Giá: Cao đến Thấp</option>
+                </select>
+            </div>
+        </div>
+
+        <div th:if="${products != null && !products.isEmpty()}" 
+             class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
+            
+            <div th:each="product : ${products}" class="group">
+                <div class="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-4 rounded-xl shadow-sm">
+                    <img th:if="${product.imageUrl != null}" 
+                         th:src="${product.imageUrl}" 
+                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div th:unless="${product.imageUrl != null}" class="w-full h-full flex items-center justify-center text-5xl">👕</div>
+                    
+                    <div class="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                        <button class="w-full bg-black text-white py-3 rounded-lg text-sm font-bold shadow-xl hover:bg-gray-800 transition">
+                            QUICK ADD +
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-left px-1">
+                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">BST Xuân Hè 2026</p>
+                    <h3 class="font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition truncate" th:text="${product.productName}"></h3>
+                    <p class="text-sm text-gray-500 mb-3 line-clamp-1" th:text="${product.description}"></p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-lg font-black text-gray-900" 
+                              th:text="${#numbers.formatInteger(product.price, 3, 'POINT') + ' đ'}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        </section>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

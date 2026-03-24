@@ -1,6 +1,9 @@
 package com.btl.ltw.model;
 
-import com.btl.ltw.enums.Size;
+import java.time.LocalDateTime;
+
+import com.btl.ltw.enums.CouponStatus;
+import com.btl.ltw.enums.DiscountType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,9 +11,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,19 +21,24 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "product_id", "size", "color" }))
-public class ProductVariant {
+public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String code;
+
     @Enumerated(EnumType.STRING)
-    private Size size; // S, M, L, XL
+    private DiscountType discountType; // PERCENT, FIXED
 
-    private String color;
+    private double discountValue;
 
-    private int stockQuantity;
+    private LocalDateTime startDate;
 
-    @ManyToOne
-    private Product product;
+    private LocalDateTime endDate;
+
+    private int quantity;
+
+    @Enumerated(EnumType.STRING)
+    private CouponStatus status; // ACTIVE, EXPIRED, INACTIVE
 }
