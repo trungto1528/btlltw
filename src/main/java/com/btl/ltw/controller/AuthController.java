@@ -20,7 +20,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "auth/login";
     }
 
     @PostMapping("/login")
@@ -32,7 +32,7 @@ public class AuthController {
     @GetMapping("/register")
     public String showRegister(Model model) {
         model.addAttribute("user", new User());
-        return "register";
+        return "auth/register";
     }
 
     @PostMapping("/register")
@@ -46,7 +46,7 @@ public class AuthController {
             // register
             model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("user", user); // Giữ lại dữ liệu đã nhập
-            return "register";
+            return "auth/register";
         }
     }
 }
