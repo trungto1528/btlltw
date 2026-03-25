@@ -6,37 +6,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.btl.ltw.dao.UserDAO;
 import com.btl.ltw.enums.Role;
+import com.btl.ltw.enums.UserStatus;
 import com.btl.ltw.model.User;
-import com.btl.ltw.repository.UserRepository;
 
 @Service
 public class UserService {
     @Autowired
-    private UserRepository userRepository;
+    private UserDAO userDAO;
 
+    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository,
-            PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public void register(User user) {
 
-        if (userRepository.existsByUsername(user.getUsername())) {
+        if (userDAO.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Username already exists");
         }
 
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (userDAO.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.CUSTOMER);
         user.setCreatedAt(LocalDateTime.now());
+        user.setStatus(UserStatus.ACTIVE);
 
-        userRepository.save(user);
+        userDAO.save(user);
     }
 }

@@ -6,27 +6,26 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.btl.ltw.dao.UserDAO;
 import com.btl.ltw.model.User;
-import com.btl.ltw.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserDAO userDAO;
 
+        @Override
+        public UserDetails loadUserByUsername(String username)
+                        throws UsernameNotFoundException {
 
-    @Override
-    public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
+                User user = userDAO.findByUsername(username)
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
-                .password(user.getPassword())
-                .roles(user.getRole().name().replace("ROLE_", ""))
-                .build();
-    }
+                return org.springframework.security.core.userdetails.User
+                                .withUsername(user.getUsername())
+                                .password(user.getPassword())
+                                .roles(user.getRole().name().replace("ROLE_", ""))
+                                .build();
+        }
 }

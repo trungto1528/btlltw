@@ -1,7 +1,7 @@
 package com.btl.ltw.services;
 
+import com.btl.ltw.dao.ProductDAO;
 import com.btl.ltw.model.Product;
-import com.btl.ltw.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,25 +11,25 @@ import java.util.List;
 public class ProductService {
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductDAO productDAO;
 
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return productDAO.findAll();
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        return productDAO.findById(id).orElse(null);
     }
 
     public List<Product> searchProducts(String keyword) {
-        return productRepository.findByProductNameContainingIgnoreCase(keyword);
+        return productDAO.findByProductNameContainingIgnoreCase(keyword);
     }
 
     public List<Product> getProductsByCategory(Long categoryId) {
-        return productRepository.findByCategoryId(categoryId);
+        return productDAO.findByCategoryId(categoryId);
     }
 
-    public List<Product> getFeaturedProducts(){
-        return productRepository.findTop4ByOrderByIdDesc();
+    public List<Product> getFeaturedProducts() {
+        return productDAO.findTop4ByOrderByIdDesc();
     }
 }
