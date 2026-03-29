@@ -11,12 +11,12 @@ import com.btl.ltw.repository.UserRepository;
 @Service
 public class UserService {
     @Autowired
-    private  UserRepository userRepository;
-    
-    private  PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
+
+    private PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -35,5 +35,29 @@ public class UserService {
         user.setRole(Role.ROLE_CUSTOMER);
 
         userRepository.save(user);
+    }
+
+    public UserRepository getAre() {
+        return userRepository;
+    }
+
+    public void setAre(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 }
