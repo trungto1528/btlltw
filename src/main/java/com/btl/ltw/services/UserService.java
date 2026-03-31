@@ -14,14 +14,9 @@ import com.btl.ltw.repository.UserRepository;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository,
-            PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public void register(User user) {
 
@@ -38,5 +33,9 @@ public class UserService {
         user.setCreatedAt(LocalDateTime.now());
 
         userRepository.save(user);
+    }
+
+    public User findByUsername(String username){
+        return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Khong tim thay user"));
     }
 }

@@ -4,115 +4,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Sản Phẩm - Cửa Hàng Bán Quần Áo</title>
+    <title th:text="${product.productName} + ' | QUAN AO Store'"></title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        input[type='number']::-webkit-inner-spin-button,
+        input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        /* Tùy chỉnh thanh cuộn cho danh sách lựa chọn nếu quá dài */
+        .custom-scrollbar::-webkit-scrollbar { height: 2px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #000; }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <!-- Header -->
-    <header class="bg-gray-800 text-white py-4 mb-8">
-        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center gap-4 flex-wrap">
-            <h1 class="text-2xl font-bold">👕 Cửa Hàng Bán Quần Áo</h1>
-            <nav class="flex gap-4 items-center">
-                <a th:href="@{/home}" class="hover:text-green-400 transition">🏠 Trang Chủ</a>
-                <a th:href="@{/products}" class="hover:text-green-400 transition">📦 Sản Phẩm</a>
-                <div sec:authorize="isAnonymous()" class="flex gap-3">
-                    <a th:href="@{/auth/login}" class="hover:text-green-400 transition">🔐 Đăng Nhập</a>
-                    <a th:href="@{/auth/register}" class="hover:text-green-400 transition">📝 Đăng Ký</a>
-                </div>
-                <div sec:authorize="isAuthenticated()" class="flex gap-3 items-center">
-                    <span>Xin chào, <b sec:authentication="name"></b></span>
-                    <form th:action="@{/logout}" method="post" class="inline">
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 transition px-3 py-1.5 rounded">🚪 Logout</button>
-                    </form>
-                </div>
-            </nav>
-        </div>
-    </header>
+<body class="bg-white">
+    <div th:replace="~{fragments/header :: header}"></div>
+    
 
-    <!-- Main Content -->
-    <div class="max-w-6xl mx-auto px-4 mb-8">
-        <a href="/products" class="inline-block mb-4 bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 transition">← Quay Lại Danh Sách Sản Phẩm</a>
+    <main class="max-w-7xl mx-auto px-4 py-8 md:py-16">
+        <nav class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 mb-8">
+            <a th:href="@{/home}" class="hover:text-black">Trang chủ</a>
+            <span>/</span>
+            <a th:href="@{/products}" class="hover:text-black">Sản phẩm</a>
+            <span>/</span>
+            <span class="text-black font-bold" th:text="${product.productName}"></span>
+        </nav>
 
-        <div th:if="${product != null}" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Product Image -->
-            <div class="flex items-center justify-center">
-                <div class="w-full aspect-square bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg overflow-hidden flex items-center justify-center">
-                    <img th:if="${product.imageUrl != null && !product.imageUrl.isEmpty()}"
+        <div th:if="${product != null}" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            
+            <div class="lg:col-span-7">
+                <div class="relative aspect-[3/4] bg-gray-100 overflow-hidden group rounded-sm">
+                    <img th:if="${product.imageUrl != null}"
                          th:src="${product.imageUrl}" 
                          th:alt="${product.productName}"
-                         class="w-full h-full object-cover">
-                    <span th:if="${product.imageUrl == null || product.imageUrl.isEmpty()}" class="text-9xl">👕</span>
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div th:unless="${product.imageUrl != null}" class="w-full h-full flex items-center justify-center text-gray-300 italic">
+                        No Image Available
+                    </div>
                 </div>
             </div>
 
-            <!-- Product Info -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <div class="inline-block text-xs text-green-700 uppercase mb-3 font-semibold bg-green-100 px-3 py-1 rounded-full" th:if="${product.category != null}">
-                    <span th:text="${product.category.categoryName}"></span>
-                </div>
-                
-                <h1 class="text-4xl font-bold text-gray-800 mb-4" th:text="${product.productName}"></h1>
-                
-                <div class="text-5xl font-bold text-red-500 mb-6" th:text="'₫' + ${#numbers.formatDecimal(product.price, 0, 'COMMA')}"></div>
-
-                <p class="text-gray-700 leading-relaxed mb-6" th:text="${product.description}"></p>
-
-                <!-- Product Details -->
-                <div class="bg-gray-50 p-4 rounded-lg mb-6 space-y-3">
-                    <div class="flex justify-between py-2 border-b border-gray-200">
-                        <span class="font-semibold text-gray-800">Danh Mục:</span>
-                        <span class="text-gray-600" th:text="${product.category != null ? product.category.categoryName : 'Không xác định'}"></span>
-                    </div>
-                    <div class="flex justify-between py-2 border-b border-gray-200">
-                        <span class="font-semibold text-gray-800">Mã Sản Phẩm:</span>
-                        <span class="text-gray-600" th:text="'#' + ${product.id}"></span>
-                    </div>
-                    <div class="flex justify-between py-2">
-                        <span class="font-semibold text-gray-800">Giá:</span>
-                        <span class="text-gray-600" th:text="'₫' + ${#numbers.formatDecimal(product.price, 0, 'COMMA')}"></span>
+            <div class="lg:col-span-5 flex flex-col">
+                <div class="mb-6">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-2" 
+                       th:text="${product.category != null ? product.category.categoryName : 'Collection'}"></p>
+                    <h1 class="text-4xl md:text-5xl font-black tracking-tighter uppercase italic leading-none mb-4" 
+                        th:text="${product.productName}"></h1>
+                    
+                    <div class="flex items-center gap-4 mb-6">
+                        <span class="text-3xl font-light text-gray-900" 
+                              th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
                     </div>
                 </div>
 
-                <!-- Stock Status -->
-                <div class="bg-blue-100 border border-blue-300 text-blue-800 p-4 rounded-lg mb-6">
-                    <span>ℹ️ Chuyên phiên bản khác nhau theo kích thước và màu sắc</span>
+                <div class="border-t border-gray-100 py-6">
+                    <p class="text-sm text-gray-600 leading-relaxed font-light mb-8" th:text="${product.description}"></p>
+                    
+                    <form th:action="@{/cart/add}" method="post" id="addToCartForm">
+                        
+                        <input type="hidden" id="selected-variant-id" name="variantId" value="">
+
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Màu sắc</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <th:block th:each="color : ${availableColors}">
+                                        <label class="relative cursor-pointer">
+                                            <input type="radio" name="color" th:value="${color}" class="peer sr-only" onchange="updateStockInfo()">
+                                            <span class="px-4 py-2 border border-gray-200 text-[11px] font-bold uppercase peer-checked:bg-black peer-checked:text-white peer-checked:border-black transition-all inline-block italic">
+                                                [[${color}]]
+                                            </span>
+                                        </label>
+                                    </th:block>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Kích thước</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <th:block th:each="size : ${availableSizes}">
+                                        <label class="relative cursor-pointer">
+                                            <input type="radio" name="size" th:value="${size}" class="peer sr-only" onchange="updateStockInfo()">
+                                            <span class="px-5 py-2 border border-gray-200 text-[11px] font-bold uppercase peer-checked:bg-black peer-checked:text-white peer-checked:border-black transition-all inline-block italic">
+                                                [[${size}]]
+                                            </span>
+                                        </label>
+                                    </th:block>
+                                </div>
+                            </div>
+
+                            <div class="py-2">
+                                <p class="text-[11px] font-bold uppercase tracking-tighter text-gray-400 italic">
+                                    Tình trạng: 
+                                    <span id="stock-status" class="text-black">
+                                        [[${#aggregates.sum(variants.![stockQuantity])}]] sản phẩm (Tổng)
+                                    </span>
+                                </p>
+                            </div>
+
+                            <div class="flex items-center w-32 border border-gray-200">
+                                <button type="button" id="btn-decrease" onclick="decreaseQuantity()" disabled 
+                                        class="w-10 h-10 flex items-center justify-center hover:bg-gray-50 transition opacity-50 cursor-not-allowed">-</button>
+                                
+                                <input type="number" id="quantity" name="quantity" value="1" min="1" 
+                                    class="w-12 text-center text-sm font-bold border-none focus:ring-0 bg-transparent" readonly>
+                                
+                                <button type="button" id="btn-increase" onclick="increaseQuantity()" disabled 
+                                        class="w-10 h-10 flex items-center justify-center hover:bg-gray-50 transition opacity-50 cursor-not-allowed">+</button>
+                            </div>
+
+                            <div class="pt-4">
+                                <button type="submit" id="add-to-cart-btn" disabled
+                                        class="w-full bg-black text-white font-bold py-5 tracking-widest hover:bg-gray-800 transition-all active:scale-[0.98] shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                                    THÊM VÀO GIỎ HÀNG
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
-                <!-- Action Buttons -->
-                <div sec:authorize="isAuthenticated()" class="flex gap-4 mb-6">
-                    <button onclick="addToCart()" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded font-semibold transition text-lg">
-                        🛒 Thêm Vào Giỏ
-                    </button>
+                <div class="mt-auto pt-8 border-t border-gray-100 space-y-4">
+                    <div class="flex items-center gap-3 text-[10px] font-bold uppercase tracking-tighter text-gray-500">
+                        <span>Mã sản phẩm:</span>
+                        <span class="text-black" th:text="'#PROD-' + ${product.id}"></span>
+                    </div>
+                    <div class="flex items-center gap-3 text-[11px] text-gray-400 italic">
+                        <span class="w-1.5 h-1.5 rounded-full bg-black"></span>
+                        Giao hàng toàn quốc (2-4 ngày)
+                    </div>
                 </div>
-
-                <!-- Not Authenticated -->
-                <div sec:authorize="isAnonymous()" class="bg-yellow-50 border border-yellow-300 text-yellow-800 p-4 rounded-lg mb-6">
-                    <p class="font-semibold">💡 Gợi Ý:</p>
-                    <p>Đăng nhập để thêm sản phẩm vào giỏ hàng</p>
-                </div>
-
-                <a href="/products" class="block bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded text-center transition font-semibold">
-                    Tiếp Tục Mua Sắm
-                </a>
             </div>
         </div>
 
-        <!-- Product Not Found -->
-        <div th:if="${product == null}" class="text-center py-12">
-            <p class="text-gray-500 text-lg mb-4">😞 Sản phẩm không tìm thấy</p>
-            <a href="/products" class="inline-block bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 transition">← Quay Lại Danh Sách Sản Phẩm</a>
+        <div th:if="${product == null}" class="py-32 text-center">
+            <h2 class="text-2xl font-black italic uppercase tracking-tighter mb-4">Sản phẩm không tồn tại</h2>
+            <a th:href="@{/products}" class="underline text-sm font-bold tracking-widest">QUAY LẠI CỬA HÀNG</a>
         </div>
-    </div>
+    </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white text-center py-8 mt-12">
-        <p>&copy; 2024 Cửa Hàng Bán Quần Áo. All Rights Reserved.</p>
-    </footer>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
-    <script>
-        function addToCart() {
-            alert('✅ Tính năng thêm vào giỏ hàng sẽ được cập nhật');
+    <script th:inline="javascript">
+        // Lấy danh sách variants từ model truyền sang JS
+        const variants = [[${variants}]];
+        
+        function updateStockInfo() {
+            const color = document.querySelector('input[name="color"]:checked')?.value;
+            const size = document.querySelector('input[name="size"]:checked')?.value;
+            
+            const variantInput = document.getElementById('selected-variant-id');
+            const stockLabel = document.getElementById('stock-status');
+            const btnIncrease = document.getElementById('btn-increase');
+            const btnDecrease = document.getElementById('btn-decrease');
+            const btnAddCart = document.getElementById('add-to-cart-btn');
+            const input = document.getElementById('quantity');
+
+            if (color && size) {
+                const match = variants.find(v => v.color === color && v.size === size);
+
+                if (match) {
+                    variantInput.value = match.id;
+                    
+                    if (match.stockQuantity > 0) {
+                        stockLabel.innerHTML = `Sẵn có: <span class="text-black font-bold">${match.stockQuantity}</span>`;
+                        
+                        // Mở khóa các nút
+                        enableControl(btnIncrease);
+                        enableControl(btnDecrease);
+                        btnAddCart.disabled = false;
+                        btnAddCart.classList.remove('opacity-50', 'cursor-not-allowed');
+
+                        // Kiểm tra nếu số lượng hiện tại > kho mới thì reset về 1
+                        if (parseInt(input.value) > match.stockQuantity || parseInt(input.value) === 0) {
+                            input.value = 1;
+                        }
+                    } else {
+                        stockLabel.innerHTML = `<span class="text-red-500 underline">Hết hàng cho lựa chọn này</span>`;
+                        disableControl(btnIncrease);
+                        disableControl(btnDecrease);
+                        btnAddCart.disabled = true;
+                        btnAddCart.classList.add('opacity-50', 'cursor-not-allowed');
+                        input.value = 0;
+                    }
+                } else {
+                    variantInput.value = "";
+                    stockLabel.innerHTML = `<span class="text-gray-400">Không có bản phối này</span>`;
+                    btnAddCart.disabled = true;
+                    disableControl(btnIncrease);
+                    disableControl(btnDecrease);
+                    input.value = 1;
+                }
+            }
         }
+
+        // Hàm bổ trợ để code sạch hơn
+        function disableControl(el) {
+            el.disabled = true;
+            el.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        function enableControl(el) {
+            el.disabled = false;
+            el.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        function increaseQuantity() {
+            const input = document.getElementById('quantity');
+            const currentVal = parseInt(input.value) || 1; // Đảm bảo luôn là số
+            // 1. Lấy thông tin màu và size đang chọn (nếu có)
+            const color = document.querySelector('input[name="color"]:checked')?.value;
+            const size = document.querySelector('input[name="size"]:checked')?.value;
+            
+            let maxStock = 0;
+
+            if (color && size) {
+                // Trường hợp đã chọn cặp Color/Size -> Lấy kho của Variant đó
+                const match = variants.find(v => v.color === color && v.size === size);
+                maxStock = match ? match.stockQuantity : 0;
+            }
+            if (currentVal < maxStock) {
+                input.value = currentVal + 1;
+            } else {
+                // Hiển thị thông báo nếu muốn
+                //console.warn("Đã đạt giới hạn tồn kho: " + maxStock);
+                alert("Số lượng trong kho chỉ còn " + maxStock + " sản phẩm");
+            }
+        }
+
+        function decreaseQuantity() {
+            const input = document.getElementById('quantity');
+            const currentVal = parseInt(input.value) || 1;
+            if (currentVal > 1) {
+                input.value = currentVal - 1;
+            }
+        }
+
     </script>
 </body>
 </html>
