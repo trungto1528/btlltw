@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.btl.ltw.model.User;
 import com.btl.ltw.services.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
@@ -19,14 +21,16 @@ public class AuthController {
     private UserService userService;
 
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpServletRequest request, Model model) {
+        // Lấy URL của trang trước đó (ví dụ: /products/3)
+        String referer = request.getHeader("Referer");
+
+        // Kiểm tra để tránh vòng lặp (không lưu nếu trang trước đó chính là trang
+        // login)
+        if (referer != null && !referer.contains("/auth/login")) {
+            model.addAttribute("redirectUrl", referer);
+        }
         return "auth/login";
-    }
-
-    @PostMapping("/login")
-    public String loginSucess(){
-
-        return "home";
     }
 
     @GetMapping("/register")

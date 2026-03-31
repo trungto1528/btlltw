@@ -7,6 +7,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.SavedRequest;
+
+import jakarta.servlet.http.HttpSession;
 
 @Configuration
 @EnableWebSecurity
@@ -25,9 +28,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         // ✅ Public routes
-                        .requestMatchers("/", "/home", "/products", "/products/**",
-                                "/auth/**", "/login", "/register",
-                                "/css/**", "/js/**", "/images/**")
+                        .requestMatchers(
+                                        "/",
+                                        "/home",
+                                        "/products",
+                                        "/products/**", // Đường dẫn khớp với   // @GetMapping("/products/{id}")
+                                        "/product/**", // Dự phòng nếu bạn đổi sang số ít
+                                        "/auth/**",
+                                        "/css/**",
+                                        "/js/**",
+                                        "/images/**",
+                                        "/static/**")
                         .permitAll()
 
                         // 👑 Admin only
@@ -36,8 +47,7 @@ public class SecurityConfig {
                         // 👨‍💼 Employee + Admin
                         .requestMatchers("/employee/**").hasAnyRole("ADMIN", "EMPLOYEE")
 
-                        // 👤 Customer
-                        .requestMatchers("/cart/**", "/orders/**").hasRole("CUSTOMER")
+                        .requestMatchers("/cart/**").hasRole("CUSTOMER")
 
                         // 🔐 Còn lại phải login
                         .anyRequest().authenticated())
@@ -46,7 +56,29 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/home", true)
+                        .successHandler((request, response, authentication) -> {
+                                // 1. Kiểm tra xem Spring Security có đang lưu trang nào bị chặn không (SavedRequest)
+                                HttpSession session = request.getSession();
+                                SavedRequest savedRequest = (SavedRequest) session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+
+                                if (savedRequest != null) {
+                                // TRƯỜNG HỢP 1: Bị đá về login (Ví dụ: bấm vào /cart/view khi chưa login)
+                                // Spring sẽ tự đưa về trang bị chặn đó.
+                                String targetUrl = savedRequest.getRedirectUrl();
+                                response.sendRedirect(targetUrl);
+                                } else {
+                                // TRƯỜNG HỢP 2: Tự bấm nút "Đăng nhập" trên Header
+                                // Chúng ta lấy từ ô Hidden Input "targetUrl" trong form login.html
+                                String targetUrl = request.getParameter("targetUrl");
+                                
+                                if (targetUrl != null && !targetUrl.isEmpty()) {
+                                        response.sendRedirect(targetUrl);
+                                } else {
+                                        // Mặc định nếu không có gì cả
+                                        response.sendRedirect("/btlltw/home"); 
+                                }
+                                }
+                        })
                         .failureUrl("/auth/login?error=true")
                         .permitAll())
 

@@ -10,6 +10,19 @@
 <body class="bg-gray-50 font-sans antialiased text-gray-900">
     
     <div th:replace="~{fragments/header :: header}"></div>
+    <div th:if="${successMessage}" class="max-w-7xl mx-auto px-4 mt-4">
+        <div class="bg-black text-white p-4 text-[11px] font-bold uppercase tracking-widest flex justify-between items-center italic">
+            <span th:text="${successMessage}"></span>
+            <button onclick="this.parentElement.style.display='none'">[X]</button>
+        </div>
+    </div>
+
+    <div th:if="${errorMessage}" class="max-w-7xl mx-auto px-4 mt-4">
+        <div class="bg-red-500 text-white p-4 text-[11px] font-bold uppercase tracking-widest flex justify-between items-center italic">
+            <span th:text="${errorMessage}"></span>
+            <button onclick="this.parentElement.style.display='none'">[X]</button>
+        </div>
+    </div>
     <section class="max-w-7xl mx-auto px-4 py-12">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-gray-100 pb-6">
             <div>
@@ -34,28 +47,30 @@
              class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
             
             <div th:each="product : ${products}" class="group">
-                <div class="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-4 rounded-xl shadow-sm">
-                    <img th:if="${product.imageUrl != null}" 
-                         th:src="${product.imageUrl}" 
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                    <div th:unless="${product.imageUrl != null}" class="w-full h-full flex items-center justify-center text-5xl">👕</div>
-                    
-                    <div class="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <button class="w-full bg-black text-white py-3 rounded-lg text-sm font-bold shadow-xl hover:bg-gray-800 transition">
-                            QUICK ADD +
-                        </button>
+                <a th:href="@{/products/{id}(id=${product.id})}" class="block">
+                    <div class="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-4 rounded-xl shadow-sm">
+                        <img th:if="${product.imageUrl != null}" 
+                             th:src="${product.imageUrl}" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div th:unless="${product.imageUrl != null}" class="w-full h-full flex items-center justify-center text-5xl">👕</div>
+                        
+                        <div class="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <button type="button" class="w-full bg-black text-white py-3 rounded-lg text-sm font-bold shadow-xl hover:bg-gray-800 transition">
+                                📄 Xem Chi Tiết
+                            </button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="text-left px-1">
-                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">BST Xuân Hè 2026</p>
-                    <h3 class="font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition truncate" th:text="${product.productName}"></h3>
-                    <p class="text-sm text-gray-500 mb-3 line-clamp-1" th:text="${product.description}"></p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-lg font-black text-gray-900" 
-                              th:text="${#numbers.formatInteger(product.price, 3, 'POINT') + ' đ'}"></span>
+                    <div class="text-left px-1">
+                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest mb-1">BST Xuân Hè 2026</p>
+                        <h3 class="font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition truncate" th:text="${product.productName}"></h3>
+                        <p class="text-sm text-gray-500 mb-3 line-clamp-1" th:text="${product.description}"></p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-lg font-black text-gray-900" 
+                                  th:text="${#numbers.formatInteger(product.price, 3, 'POINT') + ' đ'}"></span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
         
