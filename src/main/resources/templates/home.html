@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>Home</title>
+</head>
+
+<body>
+
+    <h1> Trang chủ</h1>
+
+    <!-- Chưa login -->
+    <div sec:authorize="isAnonymous()">
+        <a th:href="@{/auth/login}">🔐 Đăng nhập</a><br>
+        <a th:href="@{/auth/register}">📝 Đăng ký</a>
+    </div>
+
+    <!--  Đã login -->
+    <div>
+        <p>
+            Xin chào,
+            <b sec:authentication="name"></b>
+        </p>
+
+        <form th:action="@{/auth/logout}" method="post">
+            <button type="submit">🚪 Logout</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <a href="/products">Xem sản phẩm</a>
+
+</body>
+
+</html>
